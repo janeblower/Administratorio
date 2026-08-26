@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.6.4
+Date: 2026-08-26
+  Internal:
+    - fall back to GITHUB_TOKEN and skip portal upload without a token (#1)
+  Changes:
+    - carry tube networks through Factorissimo walls (#29)
+    - Merge branch 'main' into pneumatic/factorissimo-compat
+    - sum network radii across Factorissimo walls
+    - carry tube networks through Factorissimo walls
+---------------------------------------------------------------------------------------------------
 Version: 0.6.3
 Date: 2026-08-25
   Changes:
