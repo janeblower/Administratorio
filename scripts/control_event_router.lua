@@ -100,6 +100,7 @@ function M.register(deps)
   script.on_event(defines.events.on_rocket_launched, deps.on_rocket_launched)
   script.on_event(defines.events.on_gui_click, deps.on_gui_click)
   script.on_event(defines.events.on_gui_closed, deps.on_gui_closed)
+  script.on_event(defines.events.on_gui_opened, deps.on_gui_opened)
   script.on_event(defines.events.on_research_finished, deps.on_research_finished)
 
   -- Each system declares the cadence its own behaviour needs. Sharing an

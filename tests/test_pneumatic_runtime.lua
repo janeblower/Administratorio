@@ -213,6 +213,25 @@ test("tube reach inside a factory adds to the reach outdoors", function()
   assert_eq(with_interior, true, "the same run plus 100 tiles inside a factory exceeds it")
 end)
 
+-- The pipe window purge button, the counterpart of the vanilla fluid flush.
+
+test("purge destroys everything in flight on one network only", function()
+  storage = {
+    tube_intakes = {},
+    tube_outtakes = {},
+    tube_signals = {[7] = {["stamp"] = 5, ["work-order"] = 2}, [8] = {["stamp"] = 1}},
+    tube_network_cache = {},
+    tube_network_disabled = {},
+    tube_network_dirty = false,
+    tube_outtake_settings = {},
+  }
+
+  assert_eq(pneumatic.purge_network(7), 7, "purge should report every item it destroyed")
+  assert_eq(pneumatic.get_network_total(7), 0, "the purged network should be empty")
+  assert_eq(pneumatic.get_network_total(8), 1, "a neighbouring network keeps its items")
+  assert_eq(pneumatic.purge_network(nil), 0, "purging an unknown network is a no-op")
+end)
+
 print("\n=== PNEUMATIC RUNTIME TESTS ===")
 print("Passed: " .. passed .. "  Failed: " .. failed .. "  Total: " .. (passed + failed))
 if failed > 0 then

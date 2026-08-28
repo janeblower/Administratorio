@@ -7,6 +7,7 @@ require("compat.init").load("runtime")
 
 local C = require("scripts.constants")
 local pneumatic = require("scripts.pneumatic")
+local pneumatic_gui = require("scripts.pneumatic_gui")
 local interplanetary_tube = require("scripts.interplanetary_tube")
 local ai_server = require("scripts.ai_server")
 local heat_exhaust = require("scripts.heat_exhaust")
@@ -2186,7 +2187,9 @@ local function on_gui_click(event)
   local player = game.get_player(event.player_index)
   if not player then return end
 
-  if event.element.name == "administratorio-win-close" then
+  if pneumatic_gui.on_gui_click(event) then
+    return
+  elseif event.element.name == "administratorio-win-close" then
     if player.gui.screen["administratorio-win-screen"] then
       player.gui.screen["administratorio-win-screen"].destroy()
     end
@@ -2196,7 +2199,12 @@ local function on_gui_click(event)
 end
 
 local function on_gui_closed(event)
+  pneumatic_gui.on_gui_closed(event)
   runtime_debug.handle_gui_closed(event.element, event.player_index)
+end
+
+local function on_gui_opened(event)
+  pneumatic_gui.on_gui_opened(event)
 end
 
 
@@ -2329,6 +2337,7 @@ control_event_router.register({
   on_field_agent_waypoint_input = on_field_agent_waypoint_input,
   on_gui_click = on_gui_click,
   on_gui_closed = on_gui_closed,
+  on_gui_opened = on_gui_opened,
   on_init = on_init,
   on_load = on_load,
   on_main_tick = on_main_tick,

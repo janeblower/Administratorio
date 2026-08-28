@@ -447,6 +447,41 @@ function M.delete_pneumatic_supports(entity)
 end
 
 -------------------------------------------------------------------------------
+-- NETWORK PURGE
+-------------------------------------------------------------------------------
+
+--- The network a visible pneumatic pipe belongs to, for the pipe GUI's purge
+--- button.  Pipes are traversable, so the BFS from one yields the same id an
+--- endpoint on the same component does.
+function M.network_id_at(entity)
+  if not entity or not entity.valid then return nil end
+  M.ensure_storage()
+  if storage.tube_network_dirty then M.rebuild_network_cache() end
+  return (bfs_network_id(entity))
+end
+
+--- Void everything in flight on a network, like the vanilla pipe flush button.
+--- Returns how many items were destroyed.
+function M.purge_network(net_id)
+  M.ensure_storage()
+  local pool = net_id and storage.tube_signals[net_id]
+  if not pool then return 0 end
+
+  local destroyed = 0
+  for _, count in pairs(pool) do destroyed = destroyed + count end
+  storage.tube_signals[net_id] = nil
+
+  for _, endpoints in ipairs({storage.tube_intakes, storage.tube_outtakes}) do
+    for uid, entry in pairs(endpoints) do
+      if storage.tube_network_cache[uid] == net_id then
+        update_combinator_signals(entry.combinator, nil)
+      end
+    end
+  end
+  return destroyed
+end
+
+-------------------------------------------------------------------------------
 -- NETWORK DETECTION
 -------------------------------------------------------------------------------
 
